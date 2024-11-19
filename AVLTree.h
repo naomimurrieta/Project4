@@ -22,6 +22,7 @@ class AVLTree {
 private:
     struct AVLNode{
         key k;
+        //the document and how many times it appeared
         map <value, int> v;
 
         //moving left and right in the tree
@@ -62,7 +63,7 @@ private:
     void clone(AVLNode*&, AVLNode*&);
 
 
-    void print(ostream&, AVLNode*&);
+    void printTree(ostream&, AVLNode*&);
 
 
     void rotateLeft(AVLNode*&);
@@ -75,6 +76,9 @@ private:
 
 
     void rotateDoubleRight(AVLNode*&);
+
+    void insert(const key&, const value&, const int&, AVLNode*&);
+
 public:
     AVLTree();
     //Copy Constructor
@@ -96,12 +100,38 @@ public:
     //private one will call the public one with the root and
     void printTree(ostream&);
 
-
+    void insert(const key&, const value&, const int&);
 
 
 
 };
 
+template<typename key, typename value>
+void AVLTree<key, value>::insert(const key &k, const value &val, const int &f, AVLNode *&n) {
+    if (n == nullptr){
+        n = new AVLNode(k);
+        //setting to one since it is the first time seeing it in the document
+        n -> v[val] = f;
+        //adding a node as size increases
+        size ++;
+        //go left
+    } else if(k<n->k){
+        insert(k, val, f, n-> left);
+        //go right
+    }else if (k> n->k){
+        insert (k, val, f, n->right);
+        //k==n->k, found the key that matches
+    }else {
+        n->v[val] = f;
+
+    }
+    balance(n);
+}
+
+template<typename key, typename value>
+void AVLTree<key, value>::insert(const key &k, const value &v, const int &f) {
+    insert(k, v, f, root);
+}
 
 //Change the n variable to no for aestetics(~--~)
 
@@ -140,12 +170,12 @@ AVLTree<key, value>::AVLTree() {
 
 template<typename key, typename value>
 void AVLTree<key, value>::printTree(ostream &out) {
-    getNode(print(), root);
+    printTree(out, root);
 }
 
 template<typename key, typename value>
-void AVLTree<key, value>::insert(const key &, const value &) {
-    getNode(root);
+void AVLTree<key, value>::insert(const key &k, const value &v) {
+    insert(k, v, root);
 }
 
 template<typename key, typename value>
@@ -221,8 +251,27 @@ void AVLTree<key, value>::rotateLeft(AVLTree::AVLNode *& n) {
 }
 
 template<typename key, typename value>
-void AVLTree<key, value>::print(ostream &, AVLTree::AVLNode *&) {
+//included in the parent function
+void AVLTree<key, value>::printTree(ostream & out, AVLTree::AVLNode *&n) {
+    if(n != nullptr){
+        //using in order
+        //alphabetically for better human readibility
+        printTree(out,n -> left);
 
+        //end of the pair now print out the frequency
+        out << n->k;
+        //using two delimeter
+
+        //for each loop that will go trhough each document that references the map that we created that contained
+        //every document with the word count of the frequency
+        for(const pair<value, int>& itr: n->v){
+            //grab each pari from the map into the node
+            out  << ";" << itr.first << "," << itr.second;
+            //the first one is the document and the second one is the frequency
+        }
+        out << endl;
+        printTree(out, n->right);
+    }
 }
 
 template<typename key, typename value>
@@ -274,7 +323,7 @@ void AVLTree<key, value>::balance(AVLTree::AVLNode *& n) {
             }
 
             //mirroring the top conditionals for the right rotation
-        }else if(height(n->right)- height(n->left>1)){
+        }else if(height(n->right)- height(n->left)>1){
             if (height(n-> right ->right) >= height(n->right->left)){
                 rotateRight(n);
 
@@ -305,11 +354,11 @@ void AVLTree<key, value>::insert(const key & k, const value & val, AVLTree::AVLN
         insert (k, val, n->right);
         //k==n->k, found the key that matches
     }else {
-        if (n->map.find(val) == n->map.end()) {
-            n->map[val] = 1;
+        if (n->v.find(val) == n->v.end()) {
+            n->v[val] = 1;
 
         } else {
-            n->map[val]++;
+            n->v[val]++;
         }
 
     }
