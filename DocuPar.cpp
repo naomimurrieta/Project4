@@ -52,12 +52,35 @@ void DocuPar::readFolder(string folder) {
     //transverse the data set from the folder
     auto itr = filesystem::recursive_directory_iterator(folder);
 
+    vector<string> files;
     for(const auto& file : itr){
         //make sure this is a jason file
         if(file.is_regular_file() && file.path().extension().string() == ".json"){
-            parseJson(file.path().string());
+            files.push_back(file.path().string());
         }
     }
+
+    duration<double> time;
+    time_point<high_resolution_clock> start, lapStart, end;
+    start = high_resolution_clock::now();
+    lapStart = start;
+    for (int i = 0; i < files.size(); i++) {
+        parseJson(files[i]);
+        end = high_resolution_clock::now();
+        time = end - lapStart;
+        if (time.count() > 17) {
+            duration<double> totalTime = end - start;
+            double runTime = totalTime.count();
+            cout << runTime << " seconds" << endl;
+            cout << "Documents parsed: " << i+1 << "/" << files.size() << endl;
+            double avgTime = runTime / (i + 1);
+            int filesLeft = files.size() - i - 1;
+            cout << "Estimated time remaining: " << (avgTime * filesLeft) / 60 << " minutes" << endl;
+            cout << endl;
+            lapStart = high_resolution_clock::now();
+        }
+    }
+    cout << "Done!" << endl;
 }
 
 

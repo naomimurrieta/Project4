@@ -26,7 +26,8 @@ void InHan::readPersistence() {
 //???REPEAT FOR PEOPLE AND ORG??
 
 
-    ifstream input("persistence.txt");
+//    ifstream input("persistence.txt");
+    ifstream input("../cmake-build-release/persistence.txt");
 
     //if the file is not able open then display a message
     if(!input.is_open()){
@@ -63,10 +64,12 @@ void InHan::readPersistence() {
             //this will put semicolens
             //one for the document and frequency
             string doc, freqStr;
+            getline(str, doc, ',');
             getline(str, freqStr, ';' );
             int freq = stoi(freqStr);
 
             phra.insert(word, doc, freq);
+            addDocCount(doc, freq);
         }
     }
 
@@ -94,10 +97,12 @@ void InHan::readPersistence() {
             //this will put semicolens
             //one for the document and frequency
             string doc, freqStr;
+            getline(str, doc, ',');
             getline(str, freqStr, ';' );
             int freq = stoi(freqStr);
 
-            peo.insert(word, doc, freq);
+            org.insert(word, doc, freq);
+            addDocCount(doc, freq);
         }
     }
 
@@ -126,10 +131,12 @@ void InHan::readPersistence() {
             //this will put semicolens
             //one for the document and frequency
             string doc, freqStr;
+            getline(str, doc, ',');
             getline(str, freqStr, ';' );
             int freq = stoi(freqStr);
 
-            org.insert(word, doc, freq);
+            peo.insert(word, doc, freq);
+            addDocCount(doc, freq);
         }
     }
     input.close();

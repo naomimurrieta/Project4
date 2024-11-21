@@ -1,6 +1,12 @@
 //
 // Created by MNGal on 11/12/2024.
 //
+
+
+
+#ifndef PROJECT4_INHAN_H
+#define PROJECT4_INHAN_H
+
 #include "AVLTree.h"
 
 //Persistance
@@ -9,11 +15,6 @@
 #include <fstream>
 //parcing the files
 #include <sstream>
-
-
-#ifndef PROJECT4_INHAN_H
-#define PROJECT4_INHAN_H
-
 
 class InHan {
 private:
@@ -65,12 +66,12 @@ public:
     int getDocCount(string doc){
         return docCounts[doc];
     }
-    void addDocCount(string doc){
+    void addDocCount(string doc, int freq = 1){
         if(docCounts.find(doc) == docCounts.end()){
             //never seen before
-            docCounts[doc]=1;
+            docCounts[doc]=freq;
         }else{
-            docCounts[doc]++;
+            docCounts[doc]+=freq;
         }
     }
 

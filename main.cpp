@@ -1,4 +1,7 @@
-
+//REFERENCES:
+//ALEC TUTOR
+//weeks of work
+//chatgpt
 
 #include "userIn.h"
 #include <iostream>

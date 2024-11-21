@@ -4,7 +4,8 @@
 
 #ifndef PROJECT4_DOCUPAR_H
 #define PROJECT4_DOCUPAR_H
-
+//declare inhan instead of including inhan.h??
+//class Inhan;
 #include "InHan.h"
 #include "porter2_stemmer.h"
 #include "rapidjson/document.h"
@@ -15,8 +16,10 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <chrono>
 
 using namespace std;
+using namespace chrono;
 using namespace rapidjson;
 using namespace Porter2Stemmer;
 

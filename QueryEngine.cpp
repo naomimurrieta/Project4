@@ -24,7 +24,7 @@ vector<pair<double, string> > QueryEngine::parseQuery(string query) {
     map <string,int> results = ih->getWord(terms[0]);
 
     //for the documents
-    for (int i = 0; i < terms.size();i++ ){
+    for (int i = 1; i < terms.size();i++ ){
         if (terms[i][0] == '-'){
             //grabs everything from the front except the '-' in the front
             string word = terms[i].substr(1, terms[i].length()-1);
@@ -57,16 +57,21 @@ vector<pair<double, string> > QueryEngine::parseQuery(string query) {
 
 
             //iterate through the results
+            vector<string> deleteDocs;
             for(const pair<string,int> itr: results){
 
                 //if this is not in the previous or current
                 if(docs.find(itr.first)==docs.end()){
-                    results.erase(itr.first);
+                    deleteDocs.push_back(itr.first);
                 }else{
                     //if it is in the intersection, we must increase its frequency from the past and the new
                     //current one (sum of the two frequencies)
                     results[itr.first] +=docs[itr.first];
                 }
+            }
+
+            for (int j = 0; j < deleteDocs.size(); j++) {
+                results.erase(deleteDocs[j]);
             }
         }
             //copying the same function as before with the parameter of PERSON
@@ -80,18 +85,22 @@ vector<pair<double, string> > QueryEngine::parseQuery(string query) {
 
 
             //iterate through the results
-            for(const pair<string,int> itr: results){
+            vector<string> deleteDocs;
+            for(const pair<string,int> itr: results) {
 
                 //if this is not in the previous or current
-                if(docs.find(itr.first)==docs.end()){
-                    results.erase(itr.first);
-                }else{
+                if (docs.find(itr.first) == docs.end()) {
+                    deleteDocs.push_back(itr.first);
+                } else {
                     //if it is in the intersection, we must increase its frequency from the past and the new
                     //current one (sum of the two frequencies)
-                    results[itr.first] +=docs[itr.first];
+                    results[itr.first] += docs[itr.first];
                 }
             }
 
+            for (int j = 0; j < deleteDocs.size(); j++) {
+                results.erase(deleteDocs[j]);
+            }
             //This is the one for regular words
         } else {
             string word = terms[i];
@@ -103,16 +112,21 @@ vector<pair<double, string> > QueryEngine::parseQuery(string query) {
 
 
             //iterate through the results
+            vector<string> deleteDocs;
             for(const pair<string,int> itr: results){
 
                 //if this is not in the previous or current
                 if(docs.find(itr.first)==docs.end()){
-                    results.erase(itr.first);
+                    deleteDocs.push_back(itr.first);
                 }else{
                     //if it is in the intersection, we must increase its frequency from the past and the new
                     //current one (sum of the two frequencies)
                     results[itr.first] +=docs[itr.first];
                 }
+            }
+
+            for (int j = 0; j < deleteDocs.size(); j++) {
+                results.erase(deleteDocs[j]);
             }
         }
     }
@@ -159,7 +173,7 @@ vector<pair<double, string>> QueryEngine::merge(vector<pair<double, string>> & l
     while(traLeft < left.size()&& traRight <right.size()){
         //want to find the larger of the two items
         if(left[traLeft] > right[traRight]){
-            vec.push_back(left[traRight]);
+            vec.push_back(left[traLeft]);
             traLeft++;
 
         }else{
@@ -175,7 +189,7 @@ vector<pair<double, string>> QueryEngine::merge(vector<pair<double, string>> & l
         traLeft++;
 
     }
-    while(traLeft<right.size()){
+    while(traRight<right.size()){
         vec.push_back(right[traRight]);
         traRight++;
     }

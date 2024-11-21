@@ -60,7 +60,7 @@ private:
     int height(AVLNode*h);
 
 
-    void clone(AVLNode*&, AVLNode*&);
+    void clone(AVLNode*&, const AVLNode*);
 
 
     void printTree(ostream&, AVLNode*&);
@@ -219,6 +219,7 @@ void AVLTree<key, value>::rotateRight(AVLTree::AVLNode *& n) {
     curr->left = n;
     //taking the bigger one and then adding 1 to the larger of the children
     n->height = max(height(n-> right), height(n->left))+1;
+    curr->height = max(height(curr-> right), height(curr->left))+1;
 
     //same thing with curr
     //4 is the left pointer instead of n
@@ -243,6 +244,7 @@ void AVLTree<key, value>::rotateLeft(AVLTree::AVLNode *& n) {
     curr->right = n;
     //taking the bigger one and then adding 1 to the larger of the children
     n->height = max(height(n-> left), height(n->right))+1;
+    curr->height = max(height(curr-> right), height(curr->left))+1;
 
     //same thing with curr
     //4 is the left pointer instead of n
@@ -275,7 +277,7 @@ void AVLTree<key, value>::printTree(ostream & out, AVLTree::AVLNode *&n) {
 }
 
 template<typename key, typename value>
-void AVLTree<key, value>::clone(AVLTree::AVLNode *& curr, AVLTree::AVLNode *& copy) {
+void AVLTree<key, value>::clone(AVLTree::AVLNode *& curr, const AVLTree::AVLNode * copy) {
 
     //Since it is by reference we can go backwards and we can look back at the parent functions
 
@@ -297,7 +299,6 @@ void AVLTree<key, value>::clone(AVLTree::AVLNode *& curr, AVLTree::AVLNode *& co
 
 template<typename key, typename value>
 int AVLTree<key, value>::height(AVLTree::AVLNode *n) {
-    return 0;
     if(n == nullptr){
         return -1;
     }else {

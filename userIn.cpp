@@ -6,6 +6,7 @@
 
 userIn::userIn() {
 //get rid of anything previous to that
+    ih = nullptr;
     clearIn();
 }
 
@@ -41,19 +42,15 @@ userIn::~userIn() {
 }
 
 void userIn::startUserIn() {
-    while(true){
+    string choice;
+    while(choice != "0"){
         //printing out all the options that could be done by the functions that were given
         cout << "Enter one of these options: " << endl;
         cout << "Option 0 to quit" << endl;
         cout << "Option 1 to run the doc parser" << endl;
         cout << "Option 2 to create persistance" << endl;
         cout << "Option 3 to read the persistance" << endl;
-        cout << "Option 4 to run the que" << endl;
-
-
-
-
-        string choice;
+        cout << "Option 4 to run the query" << endl;
         getline(cin,choice);
 
         //if statement to see if the choice matches the option
@@ -62,15 +59,17 @@ void userIn::startUserIn() {
             string path;
 
             //prompt user for path
+            cout << "Enter path: ";
             getline(cin, path);
             runPerser(path);
 
         }
         //for running query
-        if (choice == "4"){
+        else if (choice == "4"){
             string query;
 
             //prompt user for query
+            cout << "Enter query: ";
             getline(cin, query);
             runQue(query);
         }
@@ -139,9 +138,8 @@ void userIn::readPers() {
 }
 
 void userIn::runQue(string query) {
-    try {
+//    try {
         vector<pair<double, string>> results = qe.parseQuery(query);
-        qe.parseQuery(query);
         if (results.size() > 0){
             //keep looping until end of the result vector or until it hits 15
             for (int i=0; i<15 && i < results.size(); i++){
@@ -177,13 +175,13 @@ void userIn::runQue(string query) {
             cout << "No results found" << endl;
         }
 
-    }
-    catch(const exception& err){
-        cerr << "Failed to run the que" << endl;
-
-        //print out the normal error message
-        cerr << err.what() << endl;
-    }
+//    }
+//    catch(const exception& err){
+//        cerr << "Failed to run the que" << endl;
+//
+//        //print out the normal error message
+//        cerr << err.what() << endl;
+//    }
 }
 
 void userIn::clearIn() {
